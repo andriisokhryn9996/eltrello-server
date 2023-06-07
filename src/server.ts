@@ -3,7 +3,8 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import * as userController from "./controllers/users";
-import bodyParser from 'body-parser'
+import bodyParser from "body-parser"
+import authMiddleware from "./middlewares/auth"
 
 const app = express();
 const httpServer = createServer(app);
@@ -17,8 +18,8 @@ app.get("/", (req, res) => {
 })
 
 app.post("/api/users", userController.register)
-
 app.post("/api/users/login", userController.login)
+app.get("/api/user", authMiddleware, userController.currentUser)
 
 io.on("connection", () => {
     console.log("connect")
